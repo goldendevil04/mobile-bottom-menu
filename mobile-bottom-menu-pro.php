@@ -35,6 +35,10 @@ class MobileBottomMenuPro {
         add_action('wp_ajax_mbm_add_to_cart', array($this, 'ajax_add_to_cart'));
         add_action('wp_ajax_nopriv_mbm_add_to_cart', array($this, 'ajax_add_to_cart'));
         
+        // Elementor integration
+        add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widgets'));
+        add_action('elementor/elements/categories_registered', array($this, 'add_elementor_category'));
+        
         // WooCommerce hooks
         if (class_exists('WooCommerce')) {
             add_action('woocommerce_single_product_summary', array($this, 'hide_default_add_to_cart'), 1);
@@ -98,12 +102,61 @@ class MobileBottomMenuPro {
             'mobile-bottom-menu',
             'mbm_general_section'
         );
+        
+        add_settings_field(
+            'design_style',
+            'Design Style',
+            array($this, 'design_style_callback'),
+            'mobile-bottom-menu',
+            'mbm_general_section'
+        );
+        
+        add_settings_field(
+            'primary_color',
+            'Primary Color',
+            array($this, 'color_callback'),
+            'mobile-bottom-menu',
+            'mbm_general_section',
+            array('name' => 'primary_color', 'default' => '#007cba')
+        );
+        
+        add_settings_field(
+            'background_color',
+            'Background Color',
+            array($this, 'color_callback'),
+            'mobile-bottom-menu',
+            'mbm_general_section',
+            array('name' => 'background_color', 'default' => '#ffffff')
+        );
     }
     
     public function checkbox_callback($args) {
         $options = get_option('mbm_options');
         $value = isset($options[$args['name']]) ? $options[$args['name']] : 0;
         echo '<input type="checkbox" name="mbm_options[' . $args['name'] . ']" value="1" ' . checked(1, $value, false) . ' />';
+    }
+    
+    public function design_style_callback() {
+        $options = get_option('mbm_options');
+        $value = isset($options['design_style']) ? $options['design_style'] : 'modern';
+        $styles = array(
+            'modern' => 'Modern (Rounded corners, shadows)',
+            'minimal' => 'Minimal (Clean, flat design)',
+            'classic' => 'Classic (Traditional style)',
+            'gradient' => 'Gradient (Colorful gradients)'
+        );
+        
+        echo '<select name="mbm_options[design_style]">';
+        foreach ($styles as $key => $label) {
+            echo '<option value="' . $key . '" ' . selected($key, $value, false) . '>' . $label . '</option>';
+        }
+        echo '</select>';
+    }
+    
+    public function color_callback($args) {
+        $options = get_option('mbm_options');
+        $value = isset($options[$args['name']]) ? $options[$args['name']] : $args['default'];
+        echo '<input type="color" name="mbm_options[' . $args['name'] . ']" value="' . esc_attr($value) . '" />';
     }
     
     public function menu_items_callback() {
@@ -171,10 +224,19 @@ class MobileBottomMenuPro {
         $options = get_option('mbm_options');
         $enable_animations = isset($options['enable_animations']) ? $options['enable_animations'] : 0;
         $menu_items = isset($options['menu_items']) ? $options['menu_items'] : array();
+        $design_style = isset($options['design_style']) ? $options['design_style'] : 'modern';
+        $primary_color = isset($options['primary_color']) ? $options['primary_color'] : '#007cba';
+        $background_color = isset($options['background_color']) ? $options['background_color'] : '#ffffff';
         
         if (!empty($menu_items)) {
             ?>
-            <div id="mbm-bottom-menu" class="mbm-bottom-menu <?php echo $enable_animations ? 'mbm-animated' : ''; ?>">
+            <style>
+                :root {
+                    --mbm-primary-color: <?php echo esc_attr($primary_color); ?>;
+                    --mbm-background-color: <?php echo esc_attr($background_color); ?>;
+                }
+            </style>
+            <div id="mbm-bottom-menu" class="mbm-bottom-menu mbm-style-<?php echo esc_attr($design_style); ?> <?php echo $enable_animations ? 'mbm-animated' : ''; ?>">
                 <div class="mbm-menu-container">
                     <?php foreach ($menu_items as $item): ?>
                     <a href="<?php echo esc_url($item['url']); ?>" class="mbm-menu-item">
@@ -280,6 +342,24 @@ class MobileBottomMenuPro {
             remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30);
         }
     }
+    
+    // Elementor Integration
+    public function add_elementor_category($elements_manager) {
+        $elements_manager->add_category(
+            'mobile-bottom-menu',
+            array(
+                'title' => __('Mobile Bottom Menu', 'mobile-bottom-menu'),
+                'icon' => 'fa fa-mobile',
+            )
+        );
+    }
+    
+    public function register_elementor_widgets() {
+        if (defined('ELEMENTOR_PATH') && class_exists('Elementor\Widget_Base')) {
+            require_once(MBM_PLUGIN_PATH . 'elementor-widgets/mobile-menu-widget.php');
+            \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \MBM_Elementor_Widget());
+        }
+    }
 }
 
 // Initialize the plugin
@@ -289,23 +369,34 @@ new MobileBottomMenuPro();
 function mbm_create_css_file() {
     $css_content = '
 /* Mobile Bottom Menu Styles */
+:root {
+    --mbm-primary-color: #007cba;
+    --mbm-background-color: #ffffff;
+    --mbm-text-color: #666666;
+    --mbm-border-color: #e0e0e0;
+    --mbm-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    --mbm-border-radius: 12px;
+}
+
 .mbm-bottom-menu {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
-    border-top: 1px solid #e0e0e0;
+    background: var(--mbm-background-color);
     z-index: 9999;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    box-shadow: var(--mbm-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .mbm-menu-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 8px 0;
+    padding: 12px 8px 8px 8px;
     max-width: 100%;
+    position: relative;
 }
 
 .mbm-menu-item {
@@ -313,44 +404,174 @@ function mbm_create_css_file() {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: #666;
-    padding: 5px 10px;
-    transition: all 0.3s ease;
+    color: var(--mbm-text-color);
+    padding: 8px 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex: 1;
-    max-width: 80px;
+    max-width: 90px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
 }
 
 .mbm-menu-item:hover {
-    color: #007cba;
+    color: var(--mbm-primary-color);
     text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.mbm-menu-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--mbm-primary-color);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 12px;
+}
+
+.mbm-menu-item:hover::before {
+    opacity: 0.1;
 }
 
 .mbm-menu-item i {
-    font-size: 20px;
-    margin-bottom: 4px;
+    font-size: 22px;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mbm-menu-item svg {
+    width: 22px;
+    height: 22px;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mbm-label {
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
     line-height: 1.2;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+/* Design Styles */
+
+/* Modern Style */
+.mbm-style-modern {
+    border-radius: 20px 20px 0 0;
+    margin: 0 8px 0 8px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
+}
+
+.mbm-style-modern .mbm-menu-item {
+    border-radius: 16px;
+}
+
+.mbm-style-modern .mbm-menu-item:hover {
+    background: rgba(0,123,186,0.1);
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* Minimal Style */
+.mbm-style-minimal {
+    border-top: 1px solid var(--mbm-border-color);
+    box-shadow: none;
+}
+
+.mbm-style-minimal .mbm-menu-item {
+    border-radius: 0;
+    padding: 12px 8px;
+}
+
+.mbm-style-minimal .mbm-menu-item:hover {
+    background: none;
+    transform: none;
+}
+
+.mbm-style-minimal .mbm-menu-item:hover i,
+.mbm-style-minimal .mbm-menu-item:hover svg {
+    transform: scale(1.1);
+}
+
+/* Classic Style */
+.mbm-style-classic {
+    border-top: 2px solid var(--mbm-primary-color);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+}
+
+.mbm-style-classic .mbm-menu-item {
+    border-radius: 8px;
+}
+
+.mbm-style-classic .mbm-menu-item:hover {
+    background: var(--mbm-primary-color);
+    color: white;
+}
+
+/* Gradient Style */
+.mbm-style-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px 25px 0 0;
+    margin: 0 12px 0 12px;
+}
+
+.mbm-style-gradient .mbm-menu-item {
+    color: rgba(255,255,255,0.8);
+    border-radius: 20px;
+}
+
+.mbm-style-gradient .mbm-menu-item:hover {
+    color: white;
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px) scale(1.05);
 }
 
 /* Animations */
 .mbm-animated .mbm-menu-item {
-    transition: transform 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mbm-animated .mbm-menu-item:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
 }
 
-.mbm-animated .mbm-menu-item i {
-    transition: transform 0.3s ease;
+.mbm-animated .mbm-menu-item i,
+.mbm-animated .mbm-menu-item svg {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mbm-animated .mbm-menu-item:hover i {
-    transform: translateY(-2px);
+.mbm-animated .mbm-menu-item:hover i,
+.mbm-animated .mbm-menu-item:hover svg {
+    transform: translateY(-3px) scale(1.1);
+}
+
+/* Pulse animation for active items */
+@keyframes mbm-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.mbm-animated .mbm-menu-item.active {
+    animation: mbm-pulse 2s infinite;
+}
+
+/* Elementor Widget Specific Styles */
+.mbm-elementor-widget {
+    position: relative !important;
+    margin: 20px 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 /* Product Sticky Bar - Matching your design */
@@ -359,17 +580,18 @@ function mbm_create_css_file() {
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
-    border-top: 1px solid #e0e0e0;
+    background: var(--mbm-background-color);
     padding: 0;
     z-index: 9999;
-    box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
+    box-shadow: var(--mbm-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .mbm-variations-container {
     background: #f8f9fa;
     padding: 10px 15px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--mbm-border-color);
 }
 
 .mbm-variation-group {
@@ -383,7 +605,7 @@ function mbm_create_css_file() {
 .mbm-variation-group label {
     display: block;
     font-size: 12px;
-    color: #666;
+    color: var(--mbm-text-color);
     margin-bottom: 4px;
     font-weight: 500;
 }
@@ -391,11 +613,18 @@ function mbm_create_css_file() {
 .mbm-variation-select {
     width: 100%;
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 1px solid var(--mbm-border-color);
+    border-radius: var(--mbm-border-radius);
     background: #fff;
     font-size: 14px;
     color: #333;
+    transition: all 0.3s ease;
+}
+
+.mbm-variation-select:focus {
+    border-color: var(--mbm-primary-color);
+    box-shadow: 0 0 0 3px rgba(0,123,186,0.1);
+    outline: none;
 }
 
 .mbm-sticky-actions {
@@ -408,11 +637,12 @@ function mbm_create_css_file() {
 .mbm-quantity-selector {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid var(--mbm-border-color);
+    border-radius: var(--mbm-border-radius);
     background: #fff;
     overflow: hidden;
     min-width: 120px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .mbm-qty-btn {
@@ -423,7 +653,7 @@ function mbm_create_css_file() {
     font-weight: bold;
     font-size: 18px;
     color: #333;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -431,11 +661,11 @@ function mbm_create_css_file() {
 }
 
 .mbm-qty-btn:hover {
-    background: #e9ecef;
+    background: var(--mbm-primary-color);
+    color: white;
 }
 
 .mbm-qty-btn:active {
-    background: #dee2e6;
     transform: scale(0.95);
 }
 
@@ -456,7 +686,7 @@ function mbm_create_css_file() {
     flex: 1;
     padding: 14px 24px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--mbm-border-radius);
     font-weight: 600;
     font-size: 16px;
     cursor: pointer;
@@ -468,17 +698,17 @@ function mbm_create_css_file() {
     align-items: center;
     justify-content: center;
     text-transform: none;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 .mbm-add-to-cart-btn:hover {
     background: #c82333;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
 
 .mbm-add-to-cart-btn:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
 }
 
 .mbm-add-to-cart-btn:disabled {
@@ -495,30 +725,56 @@ function mbm_create_css_file() {
 
 /* Add bottom padding to body when menu is active */
 body.mbm-active {
-    padding-bottom: 70px;
+    padding-bottom: 80px;
 }
 
 body.mbm-product-active {
-    padding-bottom: 80px;
+    padding-bottom: 90px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
+    .mbm-style-modern,
+    .mbm-style-gradient {
+        margin: 0;
+        border-radius: 0;
+    }
+    
     .mbm-menu-item i {
         font-size: 18px;
+    }
+    
+    .mbm-menu-item svg {
+        width: 18px;
+        height: 18px;
     }
     
     .mbm-label {
         font-size: 10px;
     }
     
-    .mbm-product-actions {
-        gap: 5px;
+    .mbm-sticky-actions {
+        gap: 8px;
+        padding: 10px 12px;
     }
     
-    .mbm-add-to-cart, .mbm-buy-now {
-        padding: 10px 15px;
+    .mbm-add-to-cart-btn {
+        padding: 12px 20px;
         font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .mbm-menu-container {
+        padding: 8px 4px 6px 4px;
+    }
+    
+    .mbm-menu-item {
+        padding: 6px 8px;
+    }
+    
+    .mbm-quantity-selector {
+        min-width: 100px;
     }
 }
 
@@ -526,13 +782,43 @@ body.mbm-product-active {
 .mbm-menu-item {
     margin-bottom: 10px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--mbm-border-color);
     border-radius: 4px;
 }
 
 .mbm-menu-item input {
     margin-right: 10px;
     margin-bottom: 5px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --mbm-background-color: #1a1a1a;
+        --mbm-text-color: #e0e0e0;
+        --mbm-border-color: #333333;
+        --mbm-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    }
+    
+    .mbm-variations-container {
+        background: #2a2a2a;
+    }
+    
+    .mbm-variation-select {
+        background: #333;
+        color: #e0e0e0;
+        border-color: #444;
+    }
+    
+    .mbm-quantity {
+        background: #333;
+        color: #e0e0e0;
+    }
+    
+    .mbm-qty-btn {
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
 }
 ';
 
