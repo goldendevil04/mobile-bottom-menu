@@ -1,0 +1,800 @@
+/* NaniMade Animations - Micro-interactions and advanced animations */
+
+/* Keyframe Definitions */
+@keyframes nanimade-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes nanimade-bubble-float {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes nanimade-spice-particle {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes nanimade-jar-open {
+  0% {
+    clip-path: circle(0% at 50% 100%);
+  }
+  100% {
+    clip-path: circle(100% at 50% 100%);
+  }
+}
+
+@keyframes nanimade-jar-close {
+  0% {
+    clip-path: circle(100% at 50% 100%);
+  }
+  100% {
+    clip-path: circle(0% at 50% 100%);
+  }
+}
+
+@keyframes nanimade-steam {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-40px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes nanimade-ingredient-showcase {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+    filter: brightness(1.1);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+}
+
+@keyframes nanimade-timer-countdown {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+  100% {
+    stroke-dasharray: 100 100;
+  }
+}
+
+@keyframes nanimade-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+  }
+}
+
+@keyframes nanimade-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes nanimade-bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-slide-in-left {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-slide-in-up {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-slide-in-down {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-zoom-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-rotate-in {
+  0% {
+    transform: rotate(-180deg) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-flip-in-x {
+  0% {
+    transform: perspective(400px) rotateX(90deg);
+    opacity: 0;
+  }
+  40% {
+    transform: perspective(400px) rotateX(-10deg);
+  }
+  70% {
+    transform: perspective(400px) rotateX(10deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes nanimade-flip-in-y {
+  0% {
+    transform: perspective(400px) rotateY(90deg);
+    opacity: 0;
+  }
+  40% {
+    transform: perspective(400px) rotateY(-10deg);
+  }
+  70% {
+    transform: perspective(400px) rotateY(10deg);
+  }
+  100% {
+    transform: perspective(400px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/* Animation Classes */
+.nanimade-animate-float {
+  animation: nanimade-float 3s ease-in-out infinite;
+}
+
+.nanimade-animate-bubble {
+  animation: nanimade-bubble-float 4s linear infinite;
+}
+
+.nanimade-animate-spice {
+  animation: nanimade-spice-particle 2s ease-out infinite;
+}
+
+.nanimade-animate-jar-open {
+  animation: nanimade-jar-open 0.8s ease-out forwards;
+}
+
+.nanimade-animate-jar-close {
+  animation: nanimade-jar-close 0.8s ease-out forwards;
+}
+
+.nanimade-animate-steam {
+  animation: nanimade-steam 2s ease-out infinite;
+}
+
+.nanimade-animate-ingredient {
+  animation: nanimade-ingredient-showcase 2s ease-in-out infinite;
+}
+
+.nanimade-animate-timer {
+  animation: nanimade-timer-countdown 1s linear forwards;
+}
+
+.nanimade-animate-pulse-glow {
+  animation: nanimade-pulse-glow 2s ease-in-out infinite;
+}
+
+.nanimade-animate-shake {
+  animation: nanimade-shake 0.5s ease-in-out;
+}
+
+.nanimade-animate-bounce-in {
+  animation: nanimade-bounce-in 0.6s ease-out;
+}
+
+.nanimade-animate-slide-in-right {
+  animation: nanimade-slide-in-right 0.5s ease-out;
+}
+
+.nanimade-animate-slide-in-left {
+  animation: nanimade-slide-in-left 0.5s ease-out;
+}
+
+.nanimade-animate-slide-in-up {
+  animation: nanimade-slide-in-up 0.5s ease-out;
+}
+
+.nanimade-animate-slide-in-down {
+  animation: nanimade-slide-in-down 0.5s ease-out;
+}
+
+.nanimade-animate-fade-in {
+  animation: nanimade-fade-in 0.5s ease-out;
+}
+
+.nanimade-animate-zoom-in {
+  animation: nanimade-zoom-in 0.5s ease-out;
+}
+
+.nanimade-animate-rotate-in {
+  animation: nanimade-rotate-in 0.6s ease-out;
+}
+
+.nanimade-animate-flip-in-x {
+  animation: nanimade-flip-in-x 0.8s ease-out;
+}
+
+.nanimade-animate-flip-in-y {
+  animation: nanimade-flip-in-y 0.8s ease-out;
+}
+
+/* Micro-Interactions */
+.nanimade-hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nanimade-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.nanimade-hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.nanimade-hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.nanimade-hover-rotate {
+  transition: transform 0.3s ease;
+}
+
+.nanimade-hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+.nanimade-hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.nanimade-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
+}
+
+.nanimade-hover-brightness {
+  transition: filter 0.3s ease;
+}
+
+.nanimade-hover-brightness:hover {
+  filter: brightness(1.1);
+}
+
+/* Loading States */
+.nanimade-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.nanimade-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: nanimade-loading-shimmer 1.5s infinite;
+}
+
+@keyframes nanimade-loading-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.nanimade-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: nanimade-skeleton-loading 1.5s infinite;
+}
+
+@keyframes nanimade-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Scroll Animations */
+.nanimade-scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.nanimade-scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nanimade-scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.6s ease;
+}
+
+.nanimade-scroll-reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nanimade-scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 0.6s ease;
+}
+
+.nanimade-scroll-reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nanimade-scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.6s ease;
+}
+
+.nanimade-scroll-reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger Animations */
+.nanimade-stagger-container .nanimade-stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.nanimade-stagger-container.animate .nanimade-stagger-item:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.nanimade-stagger-container.animate .nanimade-stagger-item:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.nanimade-stagger-container.animate .nanimade-stagger-item:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.nanimade-stagger-container.animate .nanimade-stagger-item:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.nanimade-stagger-container.animate .nanimade-stagger-item:nth-child(5) {
+  transition-delay: 0.5s;
+}
+
+.nanimade-stagger-container.animate .nanimade-stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Particle Effects */
+.nanimade-particles {
+  position: relative;
+  overflow: hidden;
+}
+
+.nanimade-particles::before,
+.nanimade-particles::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(76, 175, 80, 0.6);
+  border-radius: 50%;
+  animation: nanimade-bubble-float 4s linear infinite;
+}
+
+.nanimade-particles::before {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.nanimade-particles::after {
+  left: 80%;
+  animation-delay: 2s;
+}
+
+/* Pickle-Specific Animations */
+.nanimade-pickle-jar {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nanimade-pickle-jar:hover {
+  transform: scale(1.05);
+}
+
+.nanimade-pickle-jar::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nanimade-pickle-jar:hover::before {
+  opacity: 1;
+  animation: nanimade-steam 1s ease-out infinite;
+}
+
+.nanimade-spice-level {
+  position: relative;
+  overflow: hidden;
+}
+
+.nanimade-spice-level::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 87, 34, 0.1) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.nanimade-spice-level:hover::after {
+  transform: translateX(100%);
+}
+
+/* Recipe Card Animations */
+.nanimade-recipe-card {
+  perspective: 1000px;
+}
+
+.nanimade-recipe-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.nanimade-recipe-card:hover .nanimade-recipe-card-inner {
+  transform: rotateY(180deg);
+}
+
+.nanimade-recipe-card-front,
+.nanimade-recipe-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.nanimade-recipe-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Ingredient Animations */
+.nanimade-ingredient {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nanimade-ingredient:hover {
+  transform: translateY(-5px);
+}
+
+.nanimade-ingredient::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--nanimade-primary), var(--nanimade-secondary));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nanimade-ingredient:hover::before {
+  opacity: 1;
+}
+
+/* Progress Animations */
+.nanimade-progress {
+  position: relative;
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.nanimade-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--nanimade-primary), var(--nanimade-secondary));
+  border-radius: inherit;
+  transition: width 0.8s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nanimade-progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: nanimade-progress-shine 2s infinite;
+}
+
+@keyframes nanimade-progress-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Touch Feedback Animations */
+.nanimade-touch-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.nanimade-touch-ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.nanimade-touch-ripple:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Seasonal Animations */
+.nanimade-seasonal-spring {
+  animation: nanimade-spring-bloom 2s ease-in-out infinite alternate;
+}
+
+@keyframes nanimade-spring-bloom {
+  0% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  100% {
+    filter: hue-rotate(10deg) brightness(1.1);
+  }
+}
+
+.nanimade-seasonal-summer {
+  animation: nanimade-summer-heat 3s ease-in-out infinite;
+}
+
+@keyframes nanimade-summer-heat {
+  0%, 100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.2) saturate(1.3);
+  }
+}
+
+.nanimade-seasonal-autumn {
+  animation: nanimade-autumn-leaves 4s ease-in-out infinite;
+}
+
+@keyframes nanimade-autumn-leaves {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    filter: hue-rotate(15deg);
+  }
+  75% {
+    filter: hue-rotate(-15deg);
+  }
+}
+
+.nanimade-seasonal-winter {
+  animation: nanimade-winter-frost 2s ease-in-out infinite alternate;
+}
+
+@keyframes nanimade-winter-frost {
+  0% {
+    filter: brightness(1) contrast(1);
+  }
+  100% {
+    filter: brightness(1.1) contrast(1.2);
+  }
+}
+
+/* Performance Optimizations */
+.nanimade-will-change {
+  will-change: transform, opacity;
+}
+
+.nanimade-gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+/* Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .nanimade-animate-float,
+  .nanimade-animate-bubble,
+  .nanimade-animate-spice,
+  .nanimade-animate-steam,
+  .nanimade-animate-ingredient,
+  .nanimade-animate-pulse-glow,
+  .nanimade-particles::before,
+  .nanimade-particles::after,
+  .nanimade-progress-bar::before,
+  .nanimade-seasonal-spring,
+  .nanimade-seasonal-summer,
+  .nanimade-seasonal-autumn,
+  .nanimade-seasonal-winter {
+    animation: none;
+  }
+  
+  .nanimade-hover-lift:hover,
+  .nanimade-hover-scale:hover,
+  .nanimade-hover-rotate:hover {
+    transform: none;
+  }
+  
+  .nanimade-recipe-card:hover .nanimade-recipe-card-inner {
+    transform: none;
+  }
+}
